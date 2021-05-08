@@ -108,7 +108,16 @@ CoCreateResize.prototype = {
     initTopDrag: function(e) {
         this.initDrag(e, 'top');
     },
+    initBottomDrag: function(e) {
+        this.initDrag(e, 'bottom');
+    },
+    initLeftDrag: function(e) {
+        this.initDrag(e, 'left');
+    },
 
+    initRightDrag: function(e) {
+        this.initDrag(e, 'right');
+    },
     doTopDrag: function(e) {
         let top, height;
 
@@ -123,10 +132,7 @@ CoCreateResize.prototype = {
         this.resizeWidget.style.height = height + 'px';
     },
 
-    initBottomDrag: function(e) {
-        this.initDrag(e, 'bottom');
-    },
-
+    
     doBottomDrag: function(e) {
         let height = 0;
 
@@ -140,9 +146,6 @@ CoCreateResize.prototype = {
         this.resizeWidget.style.height = height + 'px';
     },
 
-    initLeftDrag: function(e) {
-        this.initDrag(e, 'left');
-    },
 
     doLeftDrag: function(e) {
         let left, width;
@@ -157,9 +160,6 @@ CoCreateResize.prototype = {
         this.resizeWidget.style.width = width + 'px';
     },
 
-    initRightDrag: function(e) {
-        this.initDrag(e, 'right');
-    },
 
     doRightDrag: function(e) {
         let width = 0;
