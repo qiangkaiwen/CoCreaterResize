@@ -58,9 +58,7 @@ CoCreateResize.prototype = {
     },
 
     initResize: function() {
-        DIRECTIONS.map(d => {
-            if(this.Drags[d])   this.addListenerMulti(this.Drags[d], EVENTS[0], this.checkCorners[d]);
-        })
+        DIRECTIONS.map(d => {if(this.Drags[d])   this.addListenerMulti(this.Drags[d], EVENTS[0], this.checkCorners[d]);})
     },
 
     checkDragImplementation: function(e, from, to, offset, fcur, scur){
