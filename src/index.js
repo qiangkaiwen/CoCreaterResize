@@ -76,6 +76,10 @@ CoCreateResize.prototype = {
             this.Drags[from].style.cursor = scur;
         }
     },
+
+    initDrag: function() {
+
+    },
     
     initTopDrag: function(e) {
         this.processIframe();
@@ -87,7 +91,7 @@ CoCreateResize.prototype = {
         else
             this.startY = e.clientY;
 
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doTopDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['top']);
         this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
@@ -115,7 +119,7 @@ CoCreateResize.prototype = {
         else
             this.startY = e.clientY;
 
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doBottomDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['bottom']);
         this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
@@ -142,7 +146,7 @@ CoCreateResize.prototype = {
         else
             this.startX = e.clientX;
 
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doLeftDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['left']);
         this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
@@ -168,7 +172,7 @@ CoCreateResize.prototype = {
         else
             this.startX = e.clientX;
 
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doRightDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['right']);
         this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
@@ -188,10 +192,7 @@ CoCreateResize.prototype = {
             item.style.pointerEvents = null;
         });
 
-        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doTopDrag);
-        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doBottomDrag);
-        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doLeftDrag);
-        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doRightDrag);
+        DIRECTIONS.map(d => {this.removeListenerMulti(document.documentElement, EVENTS[0], this.doDrags[d]);})
         this.removeListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
     checkLeftDragTopCorner: function(e) {
@@ -212,10 +213,10 @@ CoCreateResize.prototype = {
     },
 
     bindListeners: function() {
-        this.doLeftDrag = this.doLeftDrag.bind(this);
-        this.doTopDrag = this.doTopDrag.bind(this);
-        this.doRightDrag = this.doRightDrag.bind(this);
-        this.doBottomDrag = this.doBottomDrag.bind(this);
+        this.doDrags['left'] = this.doLeftDrag.bind(this);
+        this.doDrags['top'] = this.doTopDrag.bind(this);
+        this.doDrags['right'] = this.doRightDrag.bind(this);
+        this.doDrags['bottom'] = this.doBottomDrag.bind(this);
         
         this.stopDrag = this.stopDrag.bind(this);
 
