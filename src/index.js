@@ -222,11 +222,6 @@ CoCreateResize.prototype = {
     },
 
     bindListeners: function() {
-        this.initLeftDrag = this.initLeftDrag.bind(this);
-        this.initTopDrag = this.initTopDrag.bind(this);
-        this.initRightDrag = this.initRightDrag.bind(this);
-        this.initBottomDrag = this.initBottomDrag.bind(this);
-        
         this.doLeftDrag = this.doLeftDrag.bind(this);
         this.doTopDrag = this.doTopDrag.bind(this);
         this.doRightDrag = this.doRightDrag.bind(this);
@@ -239,10 +234,10 @@ CoCreateResize.prototype = {
         this.checkBottomDragLeftCorner = this.checkBottomDragLeftCorner.bind(this);
         this.checkRightDragBottomCorner = this.checkRightDragBottomCorner.bind(this);
  
-        this.initDrags['top'] = this.initTopDrag;
-        this.initDrags['left'] = this.initLeftDrag;
-        this.initDrags['bottom'] = this.initBottomDrag;
-        this.initDrags['right'] = this.initRightDrag;
+        this.initDrags['top'] = this.initTopDrag.bind(this);
+        this.initDrags['left'] = this.initLeftDrag.bind(this);
+        this.initDrags['bottom'] = this.initBottomDrag.bind(this);
+        this.initDrags['right'] = this.initRightDrag.bind(this);
 
     },
 
