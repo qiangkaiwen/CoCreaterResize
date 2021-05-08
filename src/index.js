@@ -77,22 +77,36 @@ CoCreateResize.prototype = {
         }
     },
 
-    initDrag: function() {
+    initDrag: function(e, idx) {
+        let selector = document.defaultView.getComputedStyle(this.resizeWidget);
+        this.processIframe();
 
+        if(idx == 'top' ||idx == 'bottom')
+        {
+            this.startTop = parseInt(selector.top, 10);
+            this.startHeight = parseInt(selector.height, 10);
+    
+            if (e.touches)
+                this.startY = e.touches[0].clientY;
+            else
+                this.startY = e.clientY;
+        }
+        else{
+            this.startLeft = parseInt(selector.left, 10);
+            this.startWidth = parseInt(selector.width, 10);
+    
+            if (e.touches)
+                this.startX = e.touches[0].clientX;
+            else
+                this.startX = e.clientX;
+        }
+
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags[idx]);
+        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
     
     initTopDrag: function(e) {
-        this.processIframe();
-        this.startTop = parseInt(document.defaultView.getComputedStyle(this.resizeWidget).top, 10);
-        this.startHeight = parseInt(document.defaultView.getComputedStyle(this.resizeWidget).height, 10);
-
-        if (e.touches)
-            this.startY = e.touches[0].clientY;
-        else
-            this.startY = e.clientY;
-
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['top']);
-        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
+        this.initDrag(e, 'top');
     },
 
     doTopDrag: function(e) {
@@ -110,17 +124,7 @@ CoCreateResize.prototype = {
     },
 
     initBottomDrag: function(e) {
-        this.processIframe();
-        this.startTop = parseInt(document.defaultView.getComputedStyle(this.resizeWidget).top, 10);
-        this.startHeight = parseInt(document.defaultView.getComputedStyle(this.resizeWidget).height, 10);
-
-        if (e.touches)
-            this.startY = e.touches[0].clientY;
-        else
-            this.startY = e.clientY;
-
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['bottom']);
-        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
+        this.initDrag(e, 'bottom');
     },
 
     doBottomDrag: function(e) {
@@ -137,17 +141,7 @@ CoCreateResize.prototype = {
     },
 
     initLeftDrag: function(e) {
-        this.processIframe();
-        this.startLeft = parseInt(document.defaultView.getComputedStyle(this.resizeWidget).left, 10);
-        this.startWidth = parseInt(document.defaultView.getComputedStyle(this.resizeWidget).width, 10);
-
-        if (e.touches)
-            this.startX = e.touches[0].clientX;
-        else
-            this.startX = e.clientX;
-
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['left']);
-        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
+        this.initDrag(e, 'left');
     },
 
     doLeftDrag: function(e) {
@@ -164,16 +158,7 @@ CoCreateResize.prototype = {
     },
 
     initRightDrag: function(e) {
-        this.processIframe();
-        this.startWidth = parseInt(document.defaultView.getComputedStyle(this.resizeWidget).width, 10);
-
-        if (e.touches)
-            this.startX = e.touches[0].clientX;
-        else
-            this.startX = e.clientX;
-
-        this.addListenerMulti(document.documentElement, EVENTS[0], this.doDrags['right']);
-        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
+        this.initDrag(e, 'right');
     },
 
     doRightDrag: function(e) {
