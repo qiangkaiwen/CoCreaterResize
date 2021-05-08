@@ -137,9 +137,9 @@ CoCreateResize.prototype = {
         let height = 0;
 
         if (e.touches)
-            height = this.startHeight + e.touches[0].clientY - this.startY;
-        else
-            height = this.startHeight + e.clientY - this.startY;
+            e = e.touches[0];
+        
+        height = this.startHeight + e.clientY - this.startY;
 
         if (height < 10)
             return;
@@ -164,9 +164,8 @@ CoCreateResize.prototype = {
     doRightDrag: function(e) {
         let width = 0;
         if (e.touches)
-            width = this.startWidth + e.touches[0].clientX - this.startX;
-        else
-            width = this.startWidth + e.clientX - this.startX;
+            e = e.touches[0];
+        width = this.startWidth + e.clientX - this.startX;
         if (width < 10)
             return;
         this.resizeWidget.style.width = width + 'px';
