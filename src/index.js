@@ -2,6 +2,7 @@
 import observer from "@cocreate/observer";
 import "./style.css";
 
+const EVENTS = ['mousemove touchmove', 'mousedown touchstart', 'mouseup touchend'];
 
 const coCreateResize = {
     selector: '', //'.resize',
@@ -55,20 +56,20 @@ CoCreateResize.prototype = {
 
     initResize: function() {
         if (this.leftDrag) {
-            this.addListenerMulti(this.leftDrag, 'mousemove touchmove', this.checkLeftDragTopCorner);
-            this.addListenerMulti(this.leftDrag, 'mousemove touchmove', this.checkLeftDragBottomCorner);
+            this.addListenerMulti(this.leftDrag, EVENTS[0], this.checkLeftDragTopCorner);
+            this.addListenerMulti(this.leftDrag, EVENTS[0], this.checkLeftDragBottomCorner);
         }
         if (this.topDrag) {
-            this.addListenerMulti(this.topDrag, 'mousemove touchmove', this.checkTopDragLeftCorner);
-            this.addListenerMulti(this.topDrag, 'mousemove touchmove', this.checkTopDragRightCorner);
+            this.addListenerMulti(this.topDrag, EVENTS[0], this.checkTopDragLeftCorner);
+            this.addListenerMulti(this.topDrag, EVENTS[0], this.checkTopDragRightCorner);
         }
         if (this.rightDrag) {
-            this.addListenerMulti(this.rightDrag, 'mousemove touchmove', this.checkRightDragTopCorner);
-            this.addListenerMulti(this.rightDrag, 'mousemove touchmove', this.checkRightDragBottomCorner);
+            this.addListenerMulti(this.rightDrag, EVENTS[0], this.checkRightDragTopCorner);
+            this.addListenerMulti(this.rightDrag, EVENTS[0], this.checkRightDragBottomCorner);
         }
         if (this.bottomDrag) {
-            this.addListenerMulti(this.bottomDrag, 'mousemove touchmove', this.checkBottomDragLeftCorner);
-            this.addListenerMulti(this.bottomDrag, 'mousemove touchmove', this.checkBottomDragRightCorner);
+            this.addListenerMulti(this.bottomDrag, EVENTS[0], this.checkBottomDragLeftCorner);
+            this.addListenerMulti(this.bottomDrag, EVENTS[0], this.checkBottomDragRightCorner);
         }
     },
 
@@ -76,13 +77,13 @@ CoCreateResize.prototype = {
         if (e.touches)
             e = e.touches[0];
 
-        this.removeListenerMulti(this.Drags[from], 'mousedown touchstart', this.initDrags[from]);
-        this.removeListenerMulti(this.Drags[from], 'mousedown touchstart', this.initDrags[to]);
-        this.addListenerMulti(this.Drags[from], 'mousedown touchstart', this.initDrags[from]);
+        this.removeListenerMulti(this.Drags[from], EVENTS[1], this.initDrags[from]);
+        this.removeListenerMulti(this.Drags[from], EVENTS[1], this.initDrags[to]);
+        this.addListenerMulti(this.Drags[from], EVENTS[1], this.initDrags[from]);
 
         if (offset < this.cornerSize && this.Drags[to]) {
             this.Drags[from].style.cursor = fcur;
-            this.addListenerMulti(this.Drags[from], 'mousedown touchstart', this.initDrags[to]);
+            this.addListenerMulti(this.Drags[from], EVENTS[1], this.initDrags[to]);
         } else {
             this.Drags[from].style.cursor = scur;
         }
@@ -98,8 +99,8 @@ CoCreateResize.prototype = {
         else
             this.startY = e.clientY;
 
-        this.addListenerMulti(document.documentElement, 'mousemove touchmove', this.doTopDrag);
-        this.addListenerMulti(document.documentElement, 'mouseup touchend', this.stopDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doTopDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
     doTopDrag: function(e) {
@@ -126,8 +127,8 @@ CoCreateResize.prototype = {
         else
             this.startY = e.clientY;
 
-        this.addListenerMulti(document.documentElement, 'mousemove touchmove', this.doBottomDrag);
-        this.addListenerMulti(document.documentElement, 'mouseup touchend', this.stopDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doBottomDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
     doBottomDrag: function(e) {
@@ -153,8 +154,8 @@ CoCreateResize.prototype = {
         else
             this.startX = e.clientX;
 
-        this.addListenerMulti(document.documentElement, 'mousemove touchmove', this.doLeftDrag);
-        this.addListenerMulti(document.documentElement, 'mouseup touchend', this.stopDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doLeftDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
     doLeftDrag: function(e) {
@@ -179,8 +180,8 @@ CoCreateResize.prototype = {
         else
             this.startX = e.clientX;
 
-        this.addListenerMulti(document.documentElement, 'mousemove touchmove', this.doRightDrag);
-        this.addListenerMulti(document.documentElement, 'mouseup touchend', this.stopDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[0], this.doRightDrag);
+        this.addListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
     doRightDrag: function(e) {
@@ -199,11 +200,11 @@ CoCreateResize.prototype = {
             item.style.pointerEvents = null;
         });
 
-        this.removeListenerMulti(document.documentElement, 'mousemove touchmove', this.doTopDrag);
-        this.removeListenerMulti(document.documentElement, 'mousemove touchmove', this.doBottomDrag);
-        this.removeListenerMulti(document.documentElement, 'mousemove touchmove', this.doLeftDrag);
-        this.removeListenerMulti(document.documentElement, 'mousemove touchmove', this.doRightDrag);
-        this.removeListenerMulti(document.documentElement, 'mouseup touchend', this.stopDrag);
+        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doTopDrag);
+        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doBottomDrag);
+        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doLeftDrag);
+        this.removeListenerMulti(document.documentElement, EVENTS[0], this.doRightDrag);
+        this.removeListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
 
     checkTopDragLeftCorner: function(e) {
