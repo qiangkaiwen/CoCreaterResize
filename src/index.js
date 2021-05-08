@@ -3,6 +3,7 @@ import observer from "@cocreate/observer";
 import "./style.css";
 
 const EVENTS = ['mousemove touchmove', 'mousedown touchstart', 'mouseup touchend'];
+const DIRECTIONS = ['left', 'right', 'top', 'bottom'];
 
 const coCreateResize = {
     selector: '', //'.resize',
@@ -45,31 +46,31 @@ CoCreateResize.prototype = {
             this.initDrags = [];
             this.Drags = [];
 
-            this.leftDrag = this.resizeWidget.querySelector(handleObj['dragLeft']);
-            this.rightDrag = this.resizeWidget.querySelector(handleObj['dragRight']);
-            this.topDrag = this.resizeWidget.querySelector(handleObj['dragTop']);
-            this.bottomDrag = this.resizeWidget.querySelector(handleObj['dragBottom']);
+            DIRECTIONS.map(d => {
+                this.Drags[d] = this.resizeWidget.querySelector(handleObj['drag' + d.charAt(0).toUpperCase() + d.slice(1)]);
+            })
+
             this.bindListeners();
             this.initResize();
         }
     },
 
     initResize: function() {
-        if (this.leftDrag) {
-            this.addListenerMulti(this.leftDrag, EVENTS[0], this.checkLeftDragTopCorner);
-            this.addListenerMulti(this.leftDrag, EVENTS[0], this.checkLeftDragBottomCorner);
+        if (this.Drags['left']) {
+            this.addListenerMulti(this.Drags['left'], EVENTS[0], this.checkLeftDragTopCorner);
+            this.addListenerMulti(this.Drags['left'], EVENTS[0], this.checkLeftDragBottomCorner);
         }
-        if (this.topDrag) {
-            this.addListenerMulti(this.topDrag, EVENTS[0], this.checkTopDragLeftCorner);
-            this.addListenerMulti(this.topDrag, EVENTS[0], this.checkTopDragRightCorner);
+        if (this.Drags['top']) {
+            this.addListenerMulti(this.Drags['top'], EVENTS[0], this.checkTopDragLeftCorner);
+            this.addListenerMulti(this.Drags['top'], EVENTS[0], this.checkTopDragRightCorner);
         }
-        if (this.rightDrag) {
-            this.addListenerMulti(this.rightDrag, EVENTS[0], this.checkRightDragTopCorner);
-            this.addListenerMulti(this.rightDrag, EVENTS[0], this.checkRightDragBottomCorner);
+        if (this.Drags['right']) {
+            this.addListenerMulti(this.Drags['right'], EVENTS[0], this.checkRightDragTopCorner);
+            this.addListenerMulti(this.Drags['right'], EVENTS[0], this.checkRightDragBottomCorner);
         }
-        if (this.bottomDrag) {
-            this.addListenerMulti(this.bottomDrag, EVENTS[0], this.checkBottomDragLeftCorner);
-            this.addListenerMulti(this.bottomDrag, EVENTS[0], this.checkBottomDragRightCorner);
+        if (this.Drags['bottom']) {
+            this.addListenerMulti(this.Drags['bottom'], EVENTS[0], this.checkBottomDragLeftCorner);
+            this.addListenerMulti(this.Drags['bottom'], EVENTS[0], this.checkBottomDragRightCorner);
         }
     },
 
@@ -208,35 +209,35 @@ CoCreateResize.prototype = {
     },
 
     checkTopDragLeftCorner: function(e) {
-        const offset = e.clientX - this.getLeftDistance(this.topDrag) + document.documentElement.scrollLeft;
+        const offset = e.clientX - this.getLeftDistance(this.Drags['top']) + document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'top', 'left', offset, 'se-resize', 's-resize');
     },
     checkLeftDragTopCorner: function(e) {
-        const offset = e.clientY - this.getTopDistance(this.leftDrag) + document.documentElement.scrollTop;
+        const offset = e.clientY - this.getTopDistance(this.Drags['left']) + document.documentElement.scrollTop;
         this.checkDragImplementation(e, 'left', 'top', offset, 'se-resize', 'e-resize');
     },
     checkTopDragRightCorner: function(e) {
-        const offset = this.getLeftDistance(this.rightDrag) - e.clientX - document.documentElement.scrollLeft;
+        const offset = this.getLeftDistance(this.Drags['right']) - e.clientX - document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'top', 'right', offset, 'ne-resize', 's-resize');
     },
     checkRightDragTopCorner: function(e) {
-        const offset = e.clientY - this.getTopDistance(this.topDrag) + document.documentElement.scrollTop;
+        const offset = e.clientY - this.getTopDistance(this.Drags['top']) + document.documentElement.scrollTop;
         this.checkDragImplementation(e, 'right', 'top', offset, 'ne-resize', 'e-resize');
     },
     checkBottomDragLeftCorner: function(e) {
-        const offset = e.clientX - this.getLeftDistance(this.bottomDrag) + document.documentElement.scrollLeft;
+        const offset = e.clientX - this.getLeftDistance(this.Drags['bottom']) + document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'bottom', 'left', offset, 'ne-resize', 's-resize');
     },
     checkLeftDragBottomCorner: function(e) {
-        const offset = this.getTopDistance(this.bottomDrag) - e.clientY - document.documentElement.scrollTop;
+        const offset = this.getTopDistance(this.Drags['bottom']) - e.clientY - document.documentElement.scrollTop;
         this.checkDragImplementation(e, 'left', 'bottom', offset, 'ne-resize', 'e-resize');
     },
     checkBottomDragRightCorner: function(e) {
-        const offset = this.getLeftDistance(this.rightDrag) - e.clientX - document.documentElement.scrollLeft;
+        const offset = this.getLeftDistance(this.Drags['right']) - e.clientX - document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'bottom', 'right', offset, 'se-resize', 's-resize');
     },
     checkRightDragBottomCorner: function(e) {
-        const offset =  this.getTopDistance(this.bottomDrag) - e.clientY - document.documentElement.scrollTop;
+        const offset =  this.getTopDistance(this.Drags['bottom']) - e.clientY - document.documentElement.scrollTop;
         this.checkDragImplementation(e, 'right', 'bottom', offset, 'se-resize', 'e-resize');
     },
 
@@ -267,10 +268,6 @@ CoCreateResize.prototype = {
         this.initDrags['bottom'] = this.initBottomDrag;
         this.initDrags['right'] = this.initRightDrag;
 
-        this.Drags['top'] = this.topDrag;
-        this.Drags['left'] = this.leftDrag;
-        this.Drags['bottom'] = this.bottomDrag;
-        this.Drags['right'] = this.rightDrag;
     },
 
     // Get an element's distance from the top of the page
@@ -329,13 +326,6 @@ observer.init({
         coCreateResize.initElement(mutation.target);
     }
 })
-// CoCreateResize.init({
-//     selector: "* [data-resize]",
-//     dragLeft: "[data-resize='left']",
-//     dragRight: "[data-resize='right']",
-//     dragTop: "[data-resize='top']",
-//     dragBottom: "[data-resize='bottom']",
-// });
 
 
 export default coCreateResize;
