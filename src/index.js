@@ -181,19 +181,19 @@ CoCreateResize.prototype = {
         this.removeListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
     checkLeftDragTopCorner: function(e) {
-        const offset = e.clientY - this.getTopDistance(this.Drags['left']) + document.documentElement.scrollTop;
+        const offset = e.clientY - this.getDistance(this.Drags['left'], true) + document.documentElement.scrollTop;
         this.checkDragImplementation(e, 'left', 'top', offset, 'se-resize', 'e-resize');
     },
     checkTopDragRightCorner: function(e) {
-        const offset = this.getLeftDistance(this.Drags['right']) - e.clientX - document.documentElement.scrollLeft;
+        const offset = this.getDistance(this.Drags['right'], false) - e.clientX - document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'top', 'right', offset, 'ne-resize', 's-resize');
     },
     checkBottomDragLeftCorner: function(e) {
-        const offset = e.clientX - this.getLeftDistance(this.Drags['bottom']) + document.documentElement.scrollLeft;
+        const offset = e.clientX - this.getDistance(this.Drags['bottom'], false) + document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'bottom', 'left', offset, 'ne-resize', 's-resize');
     },
     checkRightDragBottomCorner: function(e) {
-        const offset =  this.getTopDistance(this.Drags['bottom']) - e.clientY - document.documentElement.scrollTop;
+        const offset =  this.getDistance(this.Drags['bottom'], true) - e.clientY - document.documentElement.scrollTop;
         this.checkDragImplementation(e, 'right', 'bottom', offset, 'se-resize', 'e-resize');
     },
 
@@ -217,24 +217,12 @@ CoCreateResize.prototype = {
 
     },
 
-    // Get an element's distance from the top of the page
-    getTopDistance: function(elem) {
+    getDistance: function(elem, flag)
+    {
         var location = 0;
         if (elem.offsetParent) {
             do {
-                location += elem.offsetTop;
-                elem = elem.offsetParent;
-            } while (elem);
-        }
-        return location >= 0 ? location : 0;
-    },
-
-    // Get an element's distance from the left of the page
-    getLeftDistance: function(elem) {
-        var location = 0;
-        if (elem.offsetParent) {
-            do {
-                location += elem.offsetLeft;
+                location += (flag)? elem.offsetTop:elem.offsetLeft;
                 elem = elem.offsetParent;
             } while (elem);
         }
