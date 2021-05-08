@@ -44,6 +44,7 @@ CoCreateResize.prototype = {
     init: function(handleObj) {
         if (this.resizeWidget) {
             this.initDrags = [];
+            this.doDrags = [];
             this.Drags = [];
 
             DIRECTIONS.map(d => {
@@ -58,19 +59,15 @@ CoCreateResize.prototype = {
     initResize: function() {
         if (this.Drags['left']) {
             this.addListenerMulti(this.Drags['left'], EVENTS[0], this.checkLeftDragTopCorner);
-            this.addListenerMulti(this.Drags['left'], EVENTS[0], this.checkLeftDragBottomCorner);
         }
         if (this.Drags['top']) {
-            this.addListenerMulti(this.Drags['top'], EVENTS[0], this.checkTopDragLeftCorner);
             this.addListenerMulti(this.Drags['top'], EVENTS[0], this.checkTopDragRightCorner);
         }
         if (this.Drags['right']) {
-            this.addListenerMulti(this.Drags['right'], EVENTS[0], this.checkRightDragTopCorner);
             this.addListenerMulti(this.Drags['right'], EVENTS[0], this.checkRightDragBottomCorner);
         }
         if (this.Drags['bottom']) {
             this.addListenerMulti(this.Drags['bottom'], EVENTS[0], this.checkBottomDragLeftCorner);
-            this.addListenerMulti(this.Drags['bottom'], EVENTS[0], this.checkBottomDragRightCorner);
         }
     },
 
@@ -207,11 +204,6 @@ CoCreateResize.prototype = {
         this.removeListenerMulti(document.documentElement, EVENTS[0], this.doRightDrag);
         this.removeListenerMulti(document.documentElement, EVENTS[2], this.stopDrag);
     },
-
-    checkTopDragLeftCorner: function(e) {
-        const offset = e.clientX - this.getLeftDistance(this.Drags['top']) + document.documentElement.scrollLeft;
-        this.checkDragImplementation(e, 'top', 'left', offset, 'se-resize', 's-resize');
-    },
     checkLeftDragTopCorner: function(e) {
         const offset = e.clientY - this.getTopDistance(this.Drags['left']) + document.documentElement.scrollTop;
         this.checkDragImplementation(e, 'left', 'top', offset, 'se-resize', 'e-resize');
@@ -220,21 +212,9 @@ CoCreateResize.prototype = {
         const offset = this.getLeftDistance(this.Drags['right']) - e.clientX - document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'top', 'right', offset, 'ne-resize', 's-resize');
     },
-    checkRightDragTopCorner: function(e) {
-        const offset = e.clientY - this.getTopDistance(this.Drags['top']) + document.documentElement.scrollTop;
-        this.checkDragImplementation(e, 'right', 'top', offset, 'ne-resize', 'e-resize');
-    },
     checkBottomDragLeftCorner: function(e) {
         const offset = e.clientX - this.getLeftDistance(this.Drags['bottom']) + document.documentElement.scrollLeft;
         this.checkDragImplementation(e, 'bottom', 'left', offset, 'ne-resize', 's-resize');
-    },
-    checkLeftDragBottomCorner: function(e) {
-        const offset = this.getTopDistance(this.Drags['bottom']) - e.clientY - document.documentElement.scrollTop;
-        this.checkDragImplementation(e, 'left', 'bottom', offset, 'ne-resize', 'e-resize');
-    },
-    checkBottomDragRightCorner: function(e) {
-        const offset = this.getLeftDistance(this.Drags['right']) - e.clientX - document.documentElement.scrollLeft;
-        this.checkDragImplementation(e, 'bottom', 'right', offset, 'se-resize', 's-resize');
     },
     checkRightDragBottomCorner: function(e) {
         const offset =  this.getTopDistance(this.Drags['bottom']) - e.clientY - document.documentElement.scrollTop;
@@ -254,13 +234,9 @@ CoCreateResize.prototype = {
         
         this.stopDrag = this.stopDrag.bind(this);
 
-        this.checkTopDragLeftCorner = this.checkTopDragLeftCorner.bind(this);
         this.checkLeftDragTopCorner = this.checkLeftDragTopCorner.bind(this);
         this.checkTopDragRightCorner = this.checkTopDragRightCorner.bind(this);
-        this.checkRightDragTopCorner = this.checkRightDragTopCorner.bind(this);
         this.checkBottomDragLeftCorner = this.checkBottomDragLeftCorner.bind(this);
-        this.checkLeftDragBottomCorner = this.checkLeftDragBottomCorner.bind(this);
-        this.checkBottomDragRightCorner = this.checkBottomDragRightCorner.bind(this);
         this.checkRightDragBottomCorner = this.checkRightDragBottomCorner.bind(this);
  
         this.initDrags['top'] = this.initTopDrag;
