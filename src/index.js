@@ -44,9 +44,10 @@ CoCreateResize.prototype = {
     init: function(handleObj) {
         if (this.resizeWidget) {
             this.initDrags = [];
+            this.checkCorners = [];
             this.doDrags = [];
             this.Drags = [];
-
+            
             DIRECTIONS.map(d => {
                 this.Drags[d] = this.resizeWidget.querySelector(handleObj['drag' + d.charAt(0).toUpperCase() + d.slice(1)]);
             })
@@ -57,18 +58,9 @@ CoCreateResize.prototype = {
     },
 
     initResize: function() {
-        if (this.Drags['left']) {
-            this.addListenerMulti(this.Drags['left'], EVENTS[0], this.checkLeftDragTopCorner);
-        }
-        if (this.Drags['top']) {
-            this.addListenerMulti(this.Drags['top'], EVENTS[0], this.checkTopDragRightCorner);
-        }
-        if (this.Drags['right']) {
-            this.addListenerMulti(this.Drags['right'], EVENTS[0], this.checkRightDragBottomCorner);
-        }
-        if (this.Drags['bottom']) {
-            this.addListenerMulti(this.Drags['bottom'], EVENTS[0], this.checkBottomDragLeftCorner);
-        }
+        DIRECTIONS.map(d => {
+            if(this.Drags[d])   this.addListenerMulti(this.Drags[d], EVENTS[0], this.checkCorners[d]);
+        })
     },
 
     checkDragImplementation: function(e, from, to, offset, fcur, scur){
@@ -229,10 +221,10 @@ CoCreateResize.prototype = {
         
         this.stopDrag = this.stopDrag.bind(this);
 
-        this.checkLeftDragTopCorner = this.checkLeftDragTopCorner.bind(this);
-        this.checkTopDragRightCorner = this.checkTopDragRightCorner.bind(this);
-        this.checkBottomDragLeftCorner = this.checkBottomDragLeftCorner.bind(this);
-        this.checkRightDragBottomCorner = this.checkRightDragBottomCorner.bind(this);
+        this.checkCorners['left'] = this.checkLeftDragTopCorner.bind(this);
+        this.checkCorners['top'] = this.checkTopDragRightCorner.bind(this);
+        this.checkCorners['bottom'] = this.checkBottomDragLeftCorner.bind(this);
+        this.checkCorners['right'] = this.checkRightDragBottomCorner.bind(this);
  
         this.initDrags['top'] = this.initTopDrag.bind(this);
         this.initDrags['left'] = this.initLeftDrag.bind(this);
